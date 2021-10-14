@@ -10,19 +10,57 @@
 <body class="subPageBody">
     <div class="headerBackground subPageHeaderBackground">
         <div class="container subPageContainer">
-        {% include header.html %}
+            {% include welcomeHeader.html %}
             <article class="page markdown-body">
                 {{ content }}
                 <img src="/assets/website_profile.png" style="float: right; max-width: 200px;" alt="">
                 <h1 style="font-size: 5em;">Ben Pust</h1>
                 <p style="font-size: 1.1em; font-weight: 500; padding: 0 1em;">Software engineer at <a href="#">Fieldwire</a>.</p>
                 <p style="font-size: 1.1em; padding: 0 1.4em; text-align: center;">I use this website to show the random collection of products I built and work on in the free time.</p>
-
+                
             </article>
         </div>
-        {% include appstoreimages.html %}
-    
-      </div>
+
+        <div class="footerIcons">
+        
+            {% if site.facebook_username %}
+            <a href="https://facebook.com/{{ site.facebook_username }}">
+                <span class="fa-stack fa-1x">
+                    <i class="socialIconBack fas fa-circle fa-stack-2x"></i>
+                    <i class="socialIconTop fab fa-facebook fa-stack-1x"></i>
+                </span>
+            </a>
+            {% endif %}
+            
+            {% if site.twitter_username %}
+            <a href="https://twitter.com/{{ site.twitter_username }}">
+                <span class="fa-stack fa-1x">
+                    <i class="socialIconBack fas fa-circle fa-stack-2x"></i>
+                    <i class="socialIconTop fab fa-twitter fa-stack-1x"></i>
+                </span>
+            </a>
+            {% endif %}
+            
+            {% if site.github_username %}
+            <a href="https://github.com/{{ site.github_username }}">
+                <span class="fa-stack fa-1x">
+                    <i class="socialIconBack fas fa-circle fa-stack-2x"></i>
+                    <i class="socialIconTop fab fa-github fa-stack-1x"></i>
+                </span>
+            </a>
+            {% endif %}
+            
+            {% if site.email_address %}
+            <a href="mailto:{{ site.email_address }}">
+                <span class="fa-stack fa-1x">
+                    <i class="socialIconBack fas fa-circle fa-stack-2x"></i>
+                    <i class="socialIconTop fas fa-envelope fa-stack-1x"></i>
+                </span>
+            </a>
+            {% endif %}
+            
+        </div>
+    </div>
 </body>
 
 </html>
