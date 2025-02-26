@@ -3,64 +3,1024 @@
 ---
 
 <!DOCTYPE html>
-<html lang="en-us">
-
-{% include head.html %}
-
-<body class="subPageBody">
-    <div class="headerBackground subPageHeaderBackground">
-        <div class="container subPageContainer">
-            {% include welcomeHeader.html %}
-            <article class="page markdown-body">
-                {{ content }}
-                <img src="/assets/website_profile.png" style="float: right; max-width: 200px;" alt="">
-                <h1 style="font-size: 5em;">Ben Pust</h1>
-                <p style="font-size: 1.1em; font-weight: 500; padding: 0 1em;">Software engineer at <a href="#">Fieldwire</a>.</p>
-                <p style="font-size: 1.1em; padding: 0 1.4em; text-align: center;">I use this website to show the random collection of products I built and work on in the free time.</p>
-                
-            </article>
-        </div>
-
-        <div class="footerIcons">
-        
-            {% if site.facebook_username %}
-            <a href="https://facebook.com/{{ site.facebook_username }}">
-                <span class="fa-stack fa-1x">
-                    <i class="socialIconBack fas fa-circle fa-stack-2x"></i>
-                    <i class="socialIconTop fab fa-facebook fa-stack-1x"></i>
-                </span>
-            </a>
-            {% endif %}
-            
-            {% if site.twitter_username %}
-            <a href="https://twitter.com/{{ site.twitter_username }}">
-                <span class="fa-stack fa-1x">
-                    <i class="socialIconBack fas fa-circle fa-stack-2x"></i>
-                    <i class="socialIconTop fab fa-twitter fa-stack-1x"></i>
-                </span>
-            </a>
-            {% endif %}
-            
-            {% if site.github_username %}
-            <a href="https://github.com/{{ site.github_username }}">
-                <span class="fa-stack fa-1x">
-                    <i class="socialIconBack fas fa-circle fa-stack-2x"></i>
-                    <i class="socialIconTop fab fa-github fa-stack-1x"></i>
-                </span>
-            </a>
-            {% endif %}
-            
-            {% if site.email_address %}
-            <a href="mailto:{{ site.email_address }}">
-                <span class="fa-stack fa-1x">
-                    <i class="socialIconBack fas fa-circle fa-stack-2x"></i>
-                    <i class="socialIconTop fas fa-envelope fa-stack-1x"></i>
-                </span>
-            </a>
-            {% endif %}
-            
-        </div>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Topological Map</title>
+  <style>
+    body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    touch-action: none;
+    position: relative;
+    background-color: #121212;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, sans-serif;
+    color: #e0e0e0;
+    }
+    canvas {
+      display: block;
+      width: 100vw;
+      height: 100vh;
+      touch-action: none;
+    }
+    .controls {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      z-index: 10;
+      max-width: 90%;
+    }
+    button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 20px;
+    background-color: rgba(40, 40, 45, 0.8);
+    backdrop-filter: blur(5px);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+    font-size: 14px;
+    font-weight: 500;
+    color: #e0e0e0;
+    transition: background-color 0.2s;
+    }
+    button:hover {
+       background-color: rgba(60, 60, 65, 0.8);
+    }
+    button:active {
+      transform: translateY(1px);
+    }
+    button.active {
+      background-color: #0066cc;
+      color: white;
+    }
+    button#rainBtn.active {
+      background-color: #00a0e4;
+      color: white;
+    }
+    .slider-container {
+    display: flex;
+    align-items: center;
+    background-color: rgba(40, 40, 45, 0.8);
+    backdrop-filter: blur(5px);
+    padding: 0 10px;
+    border-radius: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+    }
+    .slider-container label {
+    margin-right: 8px;
+    font-size: 14px;
+    color: #e0e0e0;
+    white-space: nowrap;
+    }
+    input[type="range"] {
+    width: 80px;
+    accent-color: #0066cc;
+    }
+    .instructions {
+        position: absolute;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: rgba(40, 40, 45, 0.8);
+        backdrop-filter: blur(5px);
+        padding: 10px 20px;
+        border-radius: 20px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+        color: #e0e0e0;
+        text-align: center;
+        max-width: 80%;
+        opacity: 1;
+        transition: opacity 0.5s;
+        z-index: 10;
+        }
+    .fade {
+      opacity: 0;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="topo"></canvas>
+  <!-- <div class="instructions" id="instructions">Drag to shape terrain<br>Select Rain to add water that flows downhill<br>Water responds to terrain changes!</div> -->
+  <div class="controls">
+    <button id="raiseBtn" class="active">Raise ↑</button>
+    <button id="lowerBtn">Lower ↓</button>
+    <button id="rainBtn">Rain 💧</button>
+    <div class="slider-container">
+      <label for="brushSize">Size:</label>
+      <input type="range" id="brushSize" min="1" max="10" value="5">
     </div>
-</body>
+    <div class="slider-container">
+      <label for="brushStrength">Strength:</label>
+      <input type="range" id="brushStrength" min="1" max="10" value="3">
+    </div>
+    <button id="resetBtn">Reset</button>
+    <button id="colorBtn">Colors</button>
+  </div>
 
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const canvas = document.getElementById('topo');
+      const ctx = canvas.getContext('2d');
+      const instructions = document.getElementById('instructions');
+      const resetBtn = document.getElementById('resetBtn');
+      const colorBtn = document.getElementById('colorBtn');
+      const raiseBtn = document.getElementById('raiseBtn');
+      const lowerBtn = document.getElementById('lowerBtn');
+      const rainBtn = document.getElementById('rainBtn');
+      const brushSizeSlider = document.getElementById('brushSize');
+      const brushStrengthSlider = document.getElementById('brushStrength');
+      
+      // Mode control
+      let mode = 'raise'; // 'raise', 'lower', or 'rain'
+      
+      // Set canvas dimensions
+      const setCanvasSize = () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      };
+      setCanvasSize();
+      window.addEventListener('resize', () => {
+        setCanvasSize();
+        createMesh();
+        draw();
+      });
+
+      // Hide instructions after 8 seconds
+      setTimeout(() => {
+        instructions.classList.add('fade');
+      }, 8000);
+      
+      // Color schemes - Dark mode variants
+const colorSchemes = [
+  { contour: '#00aaff', background: '#121212', water: 'rgba(0, 150, 255, 0.4)', flowingWater: 'rgba(30, 180, 255, 0.7)' },
+  { contour: '#00cc66', background: '#151515', water: 'rgba(0, 150, 200, 0.4)', flowingWater: 'rgba(0, 180, 230, 0.7)' },
+  { contour: '#aa77ff', background: '#131318', water: 'rgba(100, 150, 255, 0.4)', flowingWater: 'rgba(120, 180, 255, 0.7)' },
+  { contour: '#ff5533', background: '#181410', water: 'rgba(50, 100, 255, 0.4)', flowingWater: 'rgba(70, 130, 255, 0.7)' },
+  { contour: '#cccccc', background: '#101010', water: 'rgba(0, 120, 255, 0.4)', flowingWater: 'rgba(0, 150, 255, 0.7)' }
+];
+      let currentColorScheme = 0;
+      
+      // Grid parameters
+      const resolution = 15; // Higher resolution for smoother contours
+      let grid = [];    // Elevation grid
+      let water = [];   // Water level grid
+      let waterFlow = []; // Track water flow for animation
+      let terrainChanged = false; // Flag to track terrain changes
+      let rows, cols;
+      let isDrawing = false;
+      let lastX = 0;
+      let lastY = 0;
+      let animationFrameId = null;
+      let modifiedPositions = new Set(); // Track modified positions for efficient smoothing
+      
+      // Elevation range enhancement
+      const maxElevation = 2.0; // Increased maximum elevation for more dramatic terrain
+      
+      // Create the height mesh
+      const createMesh = () => {
+        rows = Math.ceil(canvas.height / resolution) + 1;
+        cols = Math.ceil(canvas.width / resolution) + 1;
+        grid = [];
+        water = [];
+        waterFlow = [];
+        modifiedPositions = new Set();
+        
+        for (let y = 0; y < rows; y++) {
+          const elevationRow = [];
+          const waterRow = [];
+          const flowRow = [];
+          for (let x = 0; x < cols; x++) {
+            elevationRow.push(0.5); // Initialize with mid elevation
+            waterRow.push(0);      // Initialize with no water
+            flowRow.push({
+              active: false,
+              age: 0,
+              nextX: -1,
+              nextY: -1
+            });
+          }
+          grid.push(elevationRow);
+          water.push(waterRow);
+          waterFlow.push(flowRow);
+        }
+      };
+      
+      // Draw contour lines and water
+    //   const draw = () => {
+    //     const colors = colorSchemes[currentColorScheme];
+        
+    //     // Clear canvas with background color
+    //     ctx.fillStyle = colors.background;
+    //     ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+    //     // Prepare for contour lines
+    //     ctx.strokeStyle = colors.contour;
+    //     ctx.lineWidth = 0.8;
+        
+    //     // Draw settled water pools with smooth edges
+    //     ctx.fillStyle = colors.water;
+    //     for (let y = 0; y < rows - 1; y++) {
+    //       for (let x = 0; x < cols - 1; x++) {
+    //         if (water[y][x] > 0.01) {
+    //           const depth = water[y][x];
+    //           const alpha = Math.min(0.6, depth * 0.5); // Adjust transparency based on depth
+              
+    //           // Draw water with circle instead of square for smoother appearance
+    //           ctx.beginPath();
+    //           ctx.arc(
+    //             x * resolution + resolution/2, 
+    //             y * resolution + resolution/2, 
+    //             resolution * 0.6 * Math.sqrt(depth), 
+    //             0, 
+    //             Math.PI * 2
+    //           );
+              
+    //           // Set color with dynamic alpha
+    //           ctx.fillStyle = `rgba(0, 150, 255, ${alpha})`;
+    //           ctx.fill();
+    //         }
+    //       }
+    //     }
+        
+    //     // Generate smoother contour lines at different heights
+    //     const contourLevels = 20; // More contour levels for detail
+    //     for (let level = 1; level <= contourLevels; level++) {
+    //       const threshold = level / contourLevels * maxElevation;
+          
+    //       ctx.beginPath();
+          
+    //       // March through the grid to find contour lines with smoother interpolation
+    //       for (let y = 0; y < rows - 1; y++) {
+    //         for (let x = 0; x < cols - 1; x++) {
+    //           // Get elevations at grid corners
+    //           const topLeft = grid[y][x];
+    //           const topRight = grid[y][x + 1];
+    //           const bottomLeft = grid[y + 1][x];
+    //           const bottomRight = grid[y + 1][x + 1];
+              
+    //           // Draw contour lines by connecting points with more precision
+    //           const points = [];
+    //           const values = [
+    //             { val: topLeft, x: x, y: y },
+    //             { val: topRight, x: x + 1, y: y },
+    //             { val: bottomRight, x: x + 1, y: y + 1 },
+    //             { val: bottomLeft, x: x, y: y + 1 }
+    //           ];
+              
+    //           for (let i = 0; i < 4; i++) {
+    //             const j = (i + 1) % 4;
+    //             if ((values[i].val < threshold && values[j].val >= threshold) ||
+    //                 (values[i].val >= threshold && values[j].val < threshold)) {
+    //               const fraction = (threshold - values[i].val) / (values[j].val - values[i].val);
+    //               const interpX = values[i].x + fraction * (values[j].x - values[i].x);
+    //               const interpY = values[i].y + fraction * (values[j].y - values[i].y);
+    //               points.push({ x: interpX * resolution, y: interpY * resolution });
+    //             }
+    //           }
+              
+    //           if (points.length === 2) {
+    //             ctx.moveTo(points[0].x, points[0].y);
+    //             ctx.lineTo(points[1].x, points[1].y);
+    //           }
+    //         }
+    //       }
+          
+    //       ctx.stroke();
+    //     }
+        
+    //     // Draw flowing water particles with motion blur effect
+    //     for (let y = 0; y < rows; y++) {
+    //       for (let x = 0; x < cols; x++) {
+    //         if (waterFlow[y][x].active) {
+    //           const flow = waterFlow[y][x];
+              
+    //           // Draw water particle as a gradient circle
+    //           const gradient = ctx.createRadialGradient(
+    //             (x + 0.5) * resolution, (y + 0.5) * resolution, 0,
+    //             (x + 0.5) * resolution, (y + 0.5) * resolution, resolution * 0.6
+    //           );
+    //           gradient.addColorStop(0, 'rgba(30, 180, 255, 0.8)');
+    //           gradient.addColorStop(1, 'rgba(30, 180, 255, 0)');
+              
+    //           ctx.fillStyle = gradient;
+    //           ctx.beginPath();
+    //           ctx.arc(
+    //             (x + 0.5) * resolution, 
+    //             (y + 0.5) * resolution, 
+    //             resolution * 0.6, 
+    //             0, 
+    //             Math.PI * 2
+    //           );
+    //           ctx.fill();
+              
+    //           // Draw flow line to next position if exists with motion blur
+    //           if (flow.nextX >= 0 && flow.nextY >= 0) {
+    //             const gradient = ctx.createLinearGradient(
+    //               (x + 0.5) * resolution, (y + 0.5) * resolution,
+    //               (flow.nextX + 0.5) * resolution, (flow.nextY + 0.5) * resolution
+    //             );
+    //             gradient.addColorStop(0, 'rgba(30, 180, 255, 0.6)');
+    //             gradient.addColorStop(1, 'rgba(30, 180, 255, 0.2)');
+                
+    //             ctx.strokeStyle = gradient;
+    //             ctx.lineWidth = 2;
+    //             ctx.beginPath();
+    //             ctx.moveTo((x + 0.5) * resolution, (y + 0.5) * resolution);
+    //             ctx.lineTo((flow.nextX + 0.5) * resolution, (flow.nextY + 0.5) * resolution);
+    //             ctx.stroke();
+                
+    //             // Restore contour line style
+    //             ctx.strokeStyle = colors.contour;
+    //             ctx.lineWidth = 0.8;
+    //           }
+    //         }
+    //       }
+    //     }
+    //   };
+    // Replace the draw function with this enhanced version that includes shaded elevation layers
+const draw = () => {
+  const colors = colorSchemes[currentColorScheme];
+  
+  // Clear canvas with background color
+  ctx.fillStyle = colors.background;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  
+  // Draw elevation layers with gradient shading
+  const contourLevels = 20; // Number of elevation levels
+  
+  // Create array of elevation bands to fill
+  for (let level = 0; level < contourLevels; level++) {
+    const threshold = level / contourLevels * maxElevation;
+    const nextThreshold = (level + 1) / contourLevels * maxElevation;
+    
+    // Calculate gradient color based on elevation
+    // Use HSL for more control over brightness/saturation
+    let h, s, l;
+    
+    if (colors.background.startsWith('#12')) { // If dark mode
+      // For dark mode: use colors that contrast well on dark
+      h = 210; // Blue-ish base hue
+      s = 70; // High saturation
+      l = 15 + (level / contourLevels) * 25; // Gradient from darker to lighter
+    } else {
+      // For light mode
+      h = 200; // Blue-green hue
+      s = 30 + (level / contourLevels) * 20; // Increasing saturation with height
+      l = 90 - (level / contourLevels) * 30; // Gradient from lighter to darker
+    }
+    
+    // Different color schemes
+    switch (currentColorScheme) {
+      case 0: // Blue scheme
+        h = 210;
+        break;
+      case 1: // Green scheme
+        h = 120;
+        break;
+      case 2: // Purple scheme
+        h = 270;
+        break;
+      case 3: // Red/orange scheme
+        h = 20;
+        break;
+      case 4: // Grayscale scheme
+        s = 0;
+        break;
+    }
+    
+    // Set fill color for this elevation band
+    ctx.fillStyle = `hsl(${h}, ${s}%, ${l}%)`;
+    
+    // Fill regions between contour lines
+    for (let y = 0; y < rows - 1; y++) {
+      for (let x = 0; x < cols - 1; x++) {
+        // Get elevations at grid corners
+        const topLeft = grid[y][x];
+        const topRight = grid[y][x + 1];
+        const bottomLeft = grid[y + 1][x];
+        const bottomRight = grid[y + 1][x + 1];
+        
+        // If any of the cell corners are within this elevation band, draw the cell
+        if ((topLeft >= threshold && topLeft < nextThreshold) ||
+            (topRight >= threshold && topRight < nextThreshold) ||
+            (bottomLeft >= threshold && bottomLeft < nextThreshold) ||
+            (bottomRight >= threshold && bottomRight < nextThreshold)) {
+          
+          const cellX = x * resolution;
+          const cellY = y * resolution;
+          
+          // Fill the cell rectangle
+          ctx.fillRect(cellX, cellY, resolution, resolution);
+        }
+      }
+    }
+  }
+  
+  // Draw contour lines
+  ctx.strokeStyle = colors.contour;
+  ctx.lineWidth = 0.8;
+  
+  for (let level = 1; level <= contourLevels; level++) {
+    const threshold = level / contourLevels * maxElevation;
+    
+    ctx.beginPath();
+    
+    // March through the grid to find contour lines with smoother interpolation
+    for (let y = 0; y < rows - 1; y++) {
+      for (let x = 0; x < cols - 1; x++) {
+        // Get elevations at grid corners
+        const topLeft = grid[y][x];
+        const topRight = grid[y][x + 1];
+        const bottomLeft = grid[y + 1][x];
+        const bottomRight = grid[y + 1][x + 1];
+        
+        // Draw contour lines by connecting points with more precision
+        const points = [];
+        const values = [
+          { val: topLeft, x: x, y: y },
+          { val: topRight, x: x + 1, y: y },
+          { val: bottomRight, x: x + 1, y: y + 1 },
+          { val: bottomLeft, x: x, y: y + 1 }
+        ];
+        
+        for (let i = 0; i < 4; i++) {
+          const j = (i + 1) % 4;
+          if ((values[i].val < threshold && values[j].val >= threshold) ||
+              (values[i].val >= threshold && values[j].val < threshold)) {
+            const fraction = (threshold - values[i].val) / (values[j].val - values[i].val);
+            const interpX = values[i].x + fraction * (values[j].x - values[i].x);
+            const interpY = values[i].y + fraction * (values[j].y - values[i].y);
+            points.push({ x: interpX * resolution, y: interpY * resolution });
+          }
+        }
+        
+        if (points.length === 2) {
+          ctx.moveTo(points[0].x, points[0].y);
+          ctx.lineTo(points[1].x, points[1].y);
+        }
+      }
+    }
+    
+    ctx.stroke();
+  }
+  
+  // Draw settled water pools with smooth edges
+  for (let y = 0; y < rows - 1; y++) {
+    for (let x = 0; x < cols - 1; x++) {
+      if (water[y][x] > 0.01) {
+        const depth = water[y][x];
+        const alpha = Math.min(0.6, depth * 0.5); // Adjust transparency based on depth
+        
+        // Draw water with circle instead of square for smoother appearance
+        ctx.beginPath();
+        ctx.arc(
+          x * resolution + resolution/2, 
+          y * resolution + resolution/2, 
+          resolution * 0.6 * Math.sqrt(depth), 
+          0, 
+          Math.PI * 2
+        );
+        
+        // Set color with dynamic alpha
+        ctx.fillStyle = `rgba(0, 150, 255, ${alpha})`;
+        ctx.fill();
+      }
+    }
+  }
+  
+  // Draw flowing water particles with motion blur effect
+  for (let y = 0; y < rows; y++) {
+    for (let x = 0; x < cols; x++) {
+      if (waterFlow[y][x].active) {
+        const flow = waterFlow[y][x];
+        
+        // Draw water particle as a gradient circle
+        const gradient = ctx.createRadialGradient(
+          (x + 0.5) * resolution, (y + 0.5) * resolution, 0,
+          (x + 0.5) * resolution, (y + 0.5) * resolution, resolution * 0.6
+        );
+        gradient.addColorStop(0, 'rgba(30, 180, 255, 0.8)');
+        gradient.addColorStop(1, 'rgba(30, 180, 255, 0)');
+        
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        ctx.arc(
+          (x + 0.5) * resolution, 
+          (y + 0.5) * resolution, 
+          resolution * 0.6, 
+          0, 
+          Math.PI * 2
+        );
+        ctx.fill();
+        
+        // Draw flow line to next position if exists with motion blur
+        if (flow.nextX >= 0 && flow.nextY >= 0) {
+          const gradient = ctx.createLinearGradient(
+            (x + 0.5) * resolution, (y + 0.5) * resolution,
+            (flow.nextX + 0.5) * resolution, (flow.nextY + 0.5) * resolution
+          );
+          gradient.addColorStop(0, 'rgba(30, 180, 255, 0.6)');
+          gradient.addColorStop(1, 'rgba(30, 180, 255, 0.2)');
+          
+          ctx.strokeStyle = gradient;
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.moveTo((x + 0.5) * resolution, (y + 0.5) * resolution);
+          ctx.lineTo((flow.nextX + 0.5) * resolution, (flow.nextY + 0.5) * resolution);
+          ctx.stroke();
+          
+          // Restore contour line style
+          ctx.strokeStyle = colors.contour;
+          ctx.lineWidth = 0.8;
+        }
+      }
+    }
+  }
+};
+      
+      // Apply brush effect at given coordinates
+      const applyBrush = (x, y) => {
+        const gridX = Math.floor(x / resolution);
+        const gridY = Math.floor(y / resolution);
+        
+        if (mode === 'rain') {
+          addWater(gridX, gridY);
+          return;
+        }
+        
+        // Get brush size and strength from sliders
+        const radius = parseInt(brushSizeSlider.value);
+        const baseIntensity = parseInt(brushStrengthSlider.value) / 100 * 0.15 * maxElevation; // Scale by max elevation
+        
+        for (let dy = -radius; dy <= radius; dy++) {
+          for (let dx = -radius; dx <= radius; dx++) {
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            if (distance <= radius) {
+              const nx = gridX + dx;
+              const ny = gridY + dy;
+              
+              if (nx >= 0 && nx < cols && ny >= 0 && ny < rows) {
+                // Apply height change based on distance from touch with a smooth falloff
+                const normalizedDistance = distance / radius;
+                // Gaussian-like falloff for smoother brush
+                const falloff = Math.exp(-4 * normalizedDistance * normalizedDistance);
+                const intensity = baseIntensity * falloff;
+                
+                // Store the previous elevation for comparison
+                const prevElevation = grid[ny][nx];
+                
+                if (mode === 'raise') {
+                  grid[ny][nx] = Math.min(maxElevation, grid[ny][nx] + intensity);
+                } else if (mode === 'lower') {
+                  grid[ny][nx] = Math.max(0, grid[ny][nx] - intensity);
+                }
+                
+                // Check if elevation changed significantly
+                if (Math.abs(prevElevation - grid[ny][nx]) > 0.01) {
+                  terrainChanged = true;
+                  
+                  // Add to modified positions for efficient smoothing
+                  modifiedPositions.add(`${nx},${ny}`);
+                  
+                  // Also add neighbors to modified positions
+                  for (let neighborDy = -1; neighborDy <= 1; neighborDy++) {
+                    for (let neighborDx = -1; neighborDx <= 1; neighborDx++) {
+                      const neighborX = nx + neighborDx;
+                      const neighborY = ny + neighborDy;
+                      if (neighborX >= 0 && neighborX < cols && neighborY >= 0 && neighborY < rows) {
+                        modifiedPositions.add(`${neighborX},${neighborY}`);
+                      }
+                    }
+                  }
+                  
+                  // If there's water here, make it active for recalculation
+                  if (water[ny][nx] > 0.01) {
+                    // Convert some settled water to flowing water
+                    const waterAmount = water[ny][nx];
+                    water[ny][nx] = 0;
+                    
+                    // Create a new flow particle
+                    waterFlow[ny][nx] = {
+                      active: true,
+                      age: 0,
+                      nextX: -1,
+                      nextY: -1
+                    };
+                    
+                    // Start animation if not running
+                    if (!animationFrameId) {
+                      animateWaterFlow();
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      };
+      
+      // Add water at a specific location
+      const addWater = (x, y) => {
+        if (x < 0 || x >= cols || y < 0 || y >= rows) return;
+        
+        // Initialize a water flow particle
+        waterFlow[y][x] = {
+          active: true,
+          age: 0,
+          nextX: -1,
+          nextY: -1
+        };
+        
+        // Start or continue animation
+        if (!animationFrameId) {
+          animateWaterFlow();
+        }
+      };
+      
+      // Check for and react to neighboring water affected by terrain changes
+      const checkNeighboringWater = () => {
+        if (!terrainChanged) return;
+        
+        const waterToActivate = [];
+        
+        // First identify water that needs to be activated
+        for (let y = 0; y < rows; y++) {
+          for (let x = 0; x < cols; x++) {
+            // If this cell has settled water
+            if (water[y][x] > 0.01) {
+              // Check if it should flow by looking at neighbors
+              let shouldFlow = false;
+              
+              // Current cell height including water
+              const currentHeight = grid[y][x] + water[y][x];
+              
+              // Check neighbors
+              for (let dy = -1; dy <= 1; dy++) {
+                for (let dx = -1; dx <= 1; dx++) {
+                  if (dx === 0 && dy === 0) continue;
+                  
+                  const nx = x + dx;
+                  const ny = y + dy;
+                  
+                  if (nx >= 0 && nx < cols && ny >= 0 && ny < rows) {
+                    const neighborHeight = grid[ny][nx] + water[ny][nx];
+                    if (neighborHeight < currentHeight - 0.01) {
+                      shouldFlow = true;
+                      break;
+                    }
+                  }
+                }
+                if (shouldFlow) break;
+              }
+              
+              // If this water should flow now, add to activation list
+              if (shouldFlow) {
+                waterToActivate.push({ x, y, amount: water[y][x] });
+              }
+            }
+          }
+        }
+        
+        // Now activate identified water cells
+        for (const cell of waterToActivate) {
+          // Convert settled water to flowing
+          water[cell.y][cell.x] = 0;
+          
+          // Create new flow particles
+          waterFlow[cell.y][cell.x] = {
+            active: true,
+            age: 0,
+            nextX: -1,
+            nextY: -1
+          };
+        }
+        
+        // If we found water to activate, make sure animation is running
+        if (waterToActivate.length > 0 && !animationFrameId) {
+          animateWaterFlow();
+        }
+        
+        terrainChanged = false;
+      };
+      
+      // Animate water flow
+      const animateWaterFlow = () => {
+        // Check for water affected by terrain changes
+        checkNeighboringWater();
+        
+        // Update water flow
+        updateWaterFlow();
+        
+        // Redraw
+        draw();
+        
+        // Continue animation if there are active water particles
+        let hasActiveParticles = false;
+        for (let y = 0; y < rows; y++) {
+          for (let x = 0; x < cols; x++) {
+            if (waterFlow[y][x].active) {
+              hasActiveParticles = true;
+              break;
+            }
+          }
+          if (hasActiveParticles) break;
+        }
+        
+        if (hasActiveParticles) {
+        // Throttle the animation speed
+        setTimeout(() => {
+            animationFrameId = requestAnimationFrame(animateWaterFlow);
+        }, 50); // Add a 50ms delay between frames (adjust this value to control speed)
+        } else {
+          animationFrameId = null;
+          
+          // Check once more for any water affected by terrain
+          // This handles the case where terrain changes happen just as animation stops
+          if (terrainChanged) {
+            checkNeighboringWater();
+            if (!animationFrameId && hasActiveWaterParticles()) {
+              animationFrameId = requestAnimationFrame(animateWaterFlow);
+            }
+          }
+        }
+      };
+      
+      // Check if there are any active water particles
+      const hasActiveWaterParticles = () => {
+        for (let y = 0; y < rows; y++) {
+          for (let x = 0; x < cols; x++) {
+            if (waterFlow[y][x].active) {
+              return true;
+            }
+          }
+        }
+        return false;
+      };
+      
+      // Update water flow for animation
+      const updateWaterFlow = () => {
+        // Create a copy to avoid conflicts during updates
+        const updatedFlow = JSON.parse(JSON.stringify(waterFlow));
+        
+        for (let y = 0; y < rows; y++) {
+          for (let x = 0; x < cols; x++) {
+            if (waterFlow[y][x].active) {
+              const flow = waterFlow[y][x];
+              
+              // Age the flow particle
+              flow.age += 0.5;
+              
+              // Find the lowest neighboring cell
+              let lowestHeight = grid[y][x] + water[y][x];
+              let lowestX = x;
+              let lowestY = y;
+              
+              // Check all 8 neighboring cells
+              for (let dy = -1; dy <= 1; dy++) {
+                for (let dx = -1; dx <= 1; dx++) {
+                  if (dx === 0 && dy === 0) continue;
+                  
+                  const nx = x + dx;
+                  const ny = y + dy;
+                  
+                  if (nx >= 0 && nx < cols && ny >= 0 && ny < rows) {
+                    const neighborHeight = grid[ny][nx] + water[ny][nx];
+                    if (neighborHeight < lowestHeight) {
+                      lowestHeight = neighborHeight;
+                      lowestX = nx;
+                      lowestY = ny;
+                    }
+                  }
+                }
+              }
+              
+              // Store the next position
+              flow.nextX = lowestX;
+              flow.nextY = lowestY;
+              
+              // If found a lower spot, move the water there
+              if (lowestX !== x || lowestY !== y) {
+                // Move particle to next position
+                updatedFlow[y][x].active = false;
+                updatedFlow[lowestY][lowestX].active = true;
+                updatedFlow[lowestY][lowestX].age = flow.age;
+              } else {
+                // If we can't flow further, settle the water
+                water[y][x] += 0.2;
+                updatedFlow[y][x].active = false;
+              }
+              
+              // If water particle is too old, make it settle
+              if (flow.age > 100) { // Increased from 50 to 100
+                water[y][x] += 0.2;
+                updatedFlow[y][x].active = false;
+              }
+            }
+          }
+        }
+        
+        // Update the flow grid
+        waterFlow = updatedFlow;
+      };
+      
+      // Apply optimized smoothing to the terrain - only processes modified areas
+      const smoothTerrain = () => {
+        // Skip if no modifications
+        if (modifiedPositions.size === 0) return;
+        
+        // Create a temporary array for the changed values
+        const smoothedValues = {};
+        
+        // Process only the modified positions
+        for (const pos of modifiedPositions) {
+          const [x, y] = pos.split(',').map(Number);
+          
+          // Skip edge cells
+          if (x < 1 || x >= cols - 1 || y < 1 || y >= rows - 1) continue;
+          
+          // Calculate weighted average
+          let sum = 0;
+          const weights = [0.5, 0.7, 0.5, 0.7, 1.0, 0.7, 0.5, 0.7, 0.5]; // Center weighted higher
+          let weightSum = 0;
+          let idx = 0;
+          
+          for (let dy = -1; dy <= 1; dy++) {
+            for (let dx = -1; dx <= 1; dx++) {
+              const weight = weights[idx++];
+              sum += grid[y + dy][x + dx] * weight;
+              weightSum += weight;
+            }
+          }
+          
+          // Store the smoothed value
+          smoothedValues[pos] = sum / weightSum;
+        }
+        
+        // Apply the smoothed values
+        for (const pos in smoothedValues) {
+          const [x, y] = pos.split(',').map(Number);
+          grid[y][x] = smoothedValues[pos];
+        }
+        
+        // Clear the modified positions
+        modifiedPositions.clear();
+      };
+      
+      // Interpolate between points for smooth line - optimized version
+      const interpolateLine = (x1, y1, x2, y2) => {
+        const dx = x2 - x1;
+        const dy = y2 - y1;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        
+        // Adaptive steps based on distance - fewer steps for small movements
+        const steps = Math.max(1, Math.min(8, Math.floor(distance / 2)));
+        
+        for (let i = 0; i <= steps; i++) {
+          const t = i / steps;
+          const x = x1 + dx * t;
+          const y = y1 + dy * t;
+          applyBrush(x, y);
+        }
+      };
+      
+      // Handle start of drawing
+      const startDrawing = (e) => {
+        e.preventDefault();
+        isDrawing = true;
+        
+        const point = getEventPoint(e);
+        lastX = point.x;
+        lastY = point.y;
+        
+        applyBrush(lastX, lastY);
+        draw();
+      };
+      
+      // Handle drawing movement
+      const moveDrawing = (e) => {
+        if (!isDrawing) return;
+        e.preventDefault();
+        
+        const point = getEventPoint(e);
+        const currentX = point.x;
+        const currentY = point.y;
+        
+        // Throttle smoothing during drawing to improve performance
+        const doSmoothing = Math.random() < 0.3; // 30% chance of smoothing during movement
+        
+        // Interpolate between last position and current to create smooth lines
+        interpolateLine(lastX, lastY, currentX, currentY);
+        
+        // Apply smoothing occasionally during drawing for better real-time feedback
+        if (doSmoothing && modifiedPositions.size > 0) {
+          smoothTerrain();
+        }
+        
+        lastX = currentX;
+        lastY = currentY;
+        
+        draw();
+      };
+      
+      // Handle end of drawing
+      const stopDrawing = () => {
+        isDrawing = false;
+        
+        // Apply smoothing when done drawing
+        if (modifiedPositions.size > 0) {
+          smoothTerrain();
+          draw();
+        }
+        
+        // If terrain was changed and water is present, check water flow
+        if (terrainChanged && !animationFrameId) {
+          checkNeighboringWater();
+          if (hasActiveWaterParticles()) {
+            animateWaterFlow();
+          }
+        }
+      };
+      
+      // Get coordinates from mouse or touch event
+      const getEventPoint = (e) => {
+        if (e.touches) {
+          return { x: e.touches[0].clientX, y: e.touches[0].clientY };
+        } else {
+          return { x: e.clientX, y: e.clientY };
+        }
+      };
+      
+      // Reset the grid
+      const resetGrid = () => {
+        // Cancel any ongoing animation
+        if (animationFrameId) {
+          cancelAnimationFrame(animationFrameId);
+          animationFrameId = null;
+        }
+        
+        createMesh();
+        draw();
+      };
+      
+      // Change color scheme
+      const changeColor = () => {
+        currentColorScheme = (currentColorScheme + 1) % colorSchemes.length;
+        draw();
+      };
+      
+      // Set mode to raise elevation
+      const setRaiseMode = () => {
+        mode = 'raise';
+        raiseBtn.classList.add('active');
+        lowerBtn.classList.remove('active');
+        rainBtn.classList.remove('active');
+      };
+      
+      // Set mode to lower elevation
+      const setLowerMode = () => {
+        mode = 'lower';
+        lowerBtn.classList.add('active');
+        raiseBtn.classList.remove('active');
+        rainBtn.classList.remove('active');
+      };
+      
+      // Set mode to add rain/water
+      const setRainMode = () => {
+        mode = 'rain';
+        rainBtn.classList.add('active');
+        raiseBtn.classList.remove('active');
+        lowerBtn.classList.remove('active');
+      };
+      
+      // Set up event listeners for mouse
+      canvas.addEventListener('mousedown', startDrawing);
+      canvas.addEventListener('mousemove', moveDrawing);
+      canvas.addEventListener('mouseup', stopDrawing);
+      canvas.addEventListener('mouseout', stopDrawing);
+      
+      // Set up event listeners for touch
+      canvas.addEventListener('touchstart', startDrawing);
+      canvas.addEventListener('touchmove', moveDrawing);
+      canvas.addEventListener('touchend', stopDrawing);
+      canvas.addEventListener('touchcancel', stopDrawing);
+      
+      // Set up other UI controls
+      resetBtn.addEventListener('click', resetGrid);
+      colorBtn.addEventListener('click', changeColor);
+      raiseBtn.addEventListener('click', setRaiseMode);
+      lowerBtn.addEventListener('click', setLowerMode);
+      rainBtn.addEventListener('click', setRainMode);
+      
+      // Initialize
+      createMesh();
+      draw();
+    });
+  </script>
+</body>
 </html>
