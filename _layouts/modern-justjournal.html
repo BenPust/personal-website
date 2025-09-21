@@ -60,15 +60,14 @@
             width: 120px;
             height: 120px;
             margin: 0 auto 2rem;
-            background: linear-gradient(135deg, #7877c6 0%, #ff77c6 100%);
             border-radius: 28px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3rem;
-            color: white;
             box-shadow: 0 20px 60px rgba(120, 119, 198, 0.4);
             animation: pulse 3s ease-in-out infinite;
+        }
+        .app-icon img {
+            width: 100%;
+            height: 100%;
+            border-radius: 28px;
         }
         @keyframes pulse {
             0%, 100% { transform: scale(1); box-shadow: 0 20px 60px rgba(120, 119, 198, 0.4); }
@@ -343,7 +342,7 @@
         <div class="journal-background"></div>
         <div class="journal-content">
             <div class="app-icon">
-                <i class="fas fa-book-open"></i>
+                <img src="/assets/justjournal/app-icon.png" alt="Just Journal App Icon">
             </div>
 
             <h1 class="journal-title">Just Journal</h1>
