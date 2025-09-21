@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ site.page_title }}</title>
+    <link rel="stylesheet" href="{{ '/main.css' | relative_url }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .app-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 1.5rem;
+            padding: 2.5rem;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            text-decoration: none;
+            display: block;
+        }
+
+        .app-card:hover {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(255, 255, 255, 0.1);
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
+        }
+
+        .app-header {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .app-icon-wrapper {
+            width: 80px;
+            height: 80px;
+            border-radius: 1.25rem;
+            overflow: hidden;
+            flex-shrink: 0;
+            position: relative;
+            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.3);
+        }
+
+        .app-icon-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .app-meta {
+            flex-grow: 1;
+        }
+
+        .app-name {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 0.25rem;
+            letter-spacing: -0.01em;
+        }
+
+        .app-category {
+            color: #737373;
+            font-size: 0.875rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .app-description {
+            color: #a3a3a3;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .app-features {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .app-feature {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #737373;
+            font-size: 0.875rem;
+        }
+
+        .app-feature i {
+            color: #0066ff;
+            font-size: 1rem;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-10px); }
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, rgba(0, 102, 255, 0.1), rgba(99, 102, 241, 0.1));
+            border: 1px solid rgba(0, 102, 255, 0.2);
+            border-radius: 1rem;
+            padding: 2rem;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- Clean Navigation -->
+    <nav class="clean-nav">
+        <div class="nav-inner">
+            <a href="#" class="logo">{{ site.app_name }}</a>
+            <ul class="nav-links">
+                <li><a href="#home" class="active">Home</a></li>
+                <li><a href="#apps">Apps</a></li>
+                <li><a href="#skills">Skills</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <div class="nav-actions">
+                <a href="https://github.com/{{ site.github_username }}" class="btn btn-ghost" target="_blank">
+                    <i class="fab fa-github"></i>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero-clean">
+        <div class="hero-inner">
+            <div class="hero-content">
+                <h1>
+                    Building <span class="gradient-text">Digital Products</span><br>
+                    That Make a Difference
+                </h1>
+                <p class="hero-subtitle">
+                    {{ site.app_description }}
+                </p>
+                <div class="hero-actions">
+                    <a href="#apps" class="btn btn-primary">
+                        View Projects
+                        <i class="fas fa-arrow-down"></i>
+                    </a>
+                    <a href="#contact" class="btn btn-secondary">
+                        Get in Touch
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <i class="fas fa-chevron-down" style="color: #737373;"></i>
+        </div>
+    </section>
+
+    <!-- Apps Section -->
+    <section id="apps" class="section">
+        <div class="section-inner">
+            <div class="section-header">
+                <h2>Featured Apps</h2>
+                <p>Crafted with attention to detail and user experience</p>
+            </div>
+
+            <div class="grid grid-2" style="margin-bottom: 4rem;">
+                <a href="/justjournal/" target="_blank" class="app-card">
+                    <div class="app-header">
+                        <div class="app-icon-wrapper">
+                            <img src="/assets/justjournal/app-icon.png" alt="Just Journal">
+                        </div>
+                        <div class="app-meta">
+                            <h3 class="app-name">Just Journal</h3>
+                            <p class="app-category">Productivity</p>
+                        </div>
+                    </div>
+                    <p class="app-description">
+                        Your private AI-powered digital journal. Capture thoughts, track patterns, and gain insights—all with complete privacy.
+                    </p>
+                    <div class="app-features">
+                        <div class="app-feature">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>PIN Protected</span>
+                        </div>
+                        <div class="app-feature">
+                            <i class="fas fa-brain"></i>
+                            <span>AI Insights</span>
+                        </div>
+                        <div class="app-feature">
+                            <i class="fas fa-microphone"></i>
+                            <span>Voice Notes</span>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="/aupcoming/" target="_blank" class="app-card">
+                    <div class="app-header">
+                        <div class="app-icon-wrapper">
+                            <img src="/assets/upcomingLogo.png" alt="Upcoming">
+                        </div>
+                        <div class="app-meta">
+                            <h3 class="app-name">Upcoming</h3>
+                            <p class="app-category">Lifestyle</p>
+                        </div>
+                    </div>
+                    <p class="app-description">
+                        Never miss a moment that matters. Create beautiful countdowns for your most important events and milestones.
+                    </p>
+                    <div class="app-features">
+                        <div class="app-feature">
+                            <i class="fas fa-calendar"></i>
+                            <span>Smart Countdowns</span>
+                        </div>
+                        <div class="app-feature">
+                            <i class="fas fa-bell"></i>
+                            <span>Notifications</span>
+                        </div>
+                        <div class="app-feature">
+                            <i class="fas fa-share"></i>
+                            <span>Share Events</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="section" style="background: #0a0a0a;">
+        <div class="section-inner">
+            <div class="section-header">
+                <h2>Technical Expertise</h2>
+                <p>Building with modern tools and technologies</p>
+            </div>
+
+            <div class="bento-grid">
+                <div class="bento-item span-2">
+                    <h3 style="font-size: 1.5rem; margin-bottom: 1.5rem;">Core Technologies</h3>
+                    <div style="display: flex; flex-wrap: wrap; gap: 1rem;">
+                        <span style="padding: 0.5rem 1rem; background: rgba(0, 102, 255, 0.1); border: 1px solid rgba(0, 102, 255, 0.3); border-radius: 0.5rem; color: #0066ff;">SwiftUI</span>
+                        <span style="padding: 0.5rem 1rem; background: rgba(0, 102, 255, 0.1); border: 1px solid rgba(0, 102, 255, 0.3); border-radius: 0.5rem; color: #0066ff;">React</span>
+                        <span style="padding: 0.5rem 1rem; background: rgba(0, 102, 255, 0.1); border: 1px solid rgba(0, 102, 255, 0.3); border-radius: 0.5rem; color: #0066ff;">TypeScript</span>
+                        <span style="padding: 0.5rem 1rem; background: rgba(0, 102, 255, 0.1); border: 1px solid rgba(0, 102, 255, 0.3); border-radius: 0.5rem; color: #0066ff;">Node.js</span>
+                        <span style="padding: 0.5rem 1rem; background: rgba(0, 102, 255, 0.1); border: 1px solid rgba(0, 102, 255, 0.3); border-radius: 0.5rem; color: #0066ff;">Python</span>
+                        <span style="padding: 0.5rem 1rem; background: rgba(0, 102, 255, 0.1); border: 1px solid rgba(0, 102, 255, 0.3); border-radius: 0.5rem; color: #0066ff;">GraphQL</span>
+                    </div>
+                </div>
+
+                <div class="bento-item">
+                    <div class="stat">
+                        <div class="stat-value">50+</div>
+                        <div class="stat-label">Projects</div>
+                    </div>
+                </div>
+
+                <div class="bento-item">
+                    <div class="stat">
+                        <div class="stat-value">5+</div>
+                        <div class="stat-label">Years</div>
+                    </div>
+                </div>
+
+                <div class="bento-item span-2 tall">
+                    <h3 style="font-size: 1.5rem; margin-bottom: 1.5rem;">What I Do</h3>
+                    <div style="display: grid; gap: 1.5rem;">
+                        <div class="feature-card" style="background: transparent; padding: 1.5rem;">
+                            <div class="feature-icon">
+                                <i class="fas fa-mobile-alt"></i>
+                            </div>
+                            <h4>Mobile Development</h4>
+                            <p>Native iOS apps with SwiftUI and cross-platform solutions</p>
+                        </div>
+                        <div class="feature-card" style="background: transparent; padding: 1.5rem;">
+                            <div class="feature-icon">
+                                <i class="fas fa-code"></i>
+                            </div>
+                            <h4>Web Applications</h4>
+                            <p>Modern web apps with React, Next.js, and TypeScript</p>
+                        </div>
+                        <div class="feature-card" style="background: transparent; padding: 1.5rem;">
+                            <div class="feature-icon">
+                                <i class="fas fa-cloud"></i>
+                            </div>
+                            <h4>Cloud Architecture</h4>
+                            <p>Scalable solutions on AWS, Azure, and Google Cloud</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bento-item span-2">
+                    <h3 style="font-size: 1.5rem; margin-bottom: 1rem;">Currently Learning</h3>
+                    <p style="color: #a3a3a3; line-height: 1.6;">Exploring machine learning with Core ML, diving deeper into SwiftData, and building with the latest AI models.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="section">
+        <div class="section-inner">
+            <div class="section-header">
+                <h2>Let's Build Something Together</h2>
+                <p>Always open to discussing new projects and opportunities</p>
+            </div>
+
+            <div style="max-width: 600px; margin: 0 auto; text-align: center;">
+                <div style="display: flex; gap: 1rem; justify-content: center; margin-bottom: 3rem;">
+                    <a href="mailto:{{ site.email_address }}" class="btn btn-primary">
+                        <i class="fas fa-envelope"></i>
+                        Email Me
+                    </a>
+                    <a href="https://twitter.com/{{ site.twitter_username }}" class="btn btn-secondary" target="_blank">
+                        <i class="fab fa-twitter"></i>
+                        Twitter
+                    </a>
+                    <a href="https://github.com/{{ site.github_username }}" class="btn btn-secondary" target="_blank">
+                        <i class="fab fa-github"></i>
+                        GitHub
+                    </a>
+                </div>
+
+                <p style="color: #737373;">Based in {{ site.your_city }}</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Clean Footer -->
+    <footer class="footer-clean">
+        <div class="footer-inner">
+            <p class="footer-copyright">© 2024 {{ site.your_name }}. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="/privacypolicy">Privacy</a>
+                <a href="https://github.com/{{ site.github_username }}">GitHub</a>
+                <a href="https://twitter.com/{{ site.twitter_username }}">Twitter</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scroll behavior for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Update active nav link on scroll
+        window.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.nav-links a');
+
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (pageYOffset >= sectionTop - 100) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').slice(1) === current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        // Add fade-up animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-fade-up');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.app-card, .bento-item').forEach(el => {
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
