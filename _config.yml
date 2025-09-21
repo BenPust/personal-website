@@ -1,20 +1,20 @@
 #page title
-page_title                                : Ben Pust - Updated 2025                                          # Automatically populates with app name if not set and if iOS app ID is set. Otherwise enter manually.
+page_title                                : Ben Pust                                          # Automatically populates with app name if not set and if iOS app ID is set. Otherwise enter manually.
 
 # App Info
-ios_app_id                                : 1234793120                                # Required. Enter iOS app ID to automatically populate name, price and icons (e.g. 718043190).
+ios_app_id                                :                                 # Required. Enter iOS app ID to automatically populate name, price and icons (e.g. 718043190).
 
-appstore_link                             : https://apps.apple.com/us/app/upcoming-event-countdown/id1306662750                                          # Automatically populates if not set and if iOS app ID is set. Otherwise enter manually.
+appstore_link                             :                                           # Automatically populates if not set and if iOS app ID is set. Otherwise enter manually.
 playstore_link                            :                                           # Enter Google Play Store URL.
-presskit_download_link                    :                                           # Enter a link to downloadable file or (e.g. public Dropbox link to a .zip file). 
+presskit_download_link                    :                                           # Enter a link to downloadable file or (e.g. public Dropbox link to a .zip file).
                                                                                       # Or upload your press kit file to assets and set path accordingly (e.g. "assets/your_press_kit.zip").
 
-app_icon                                  : assets/upcomingLogo.png                      # Automatically populates if not set and if iOS app ID is set.  Otherwise enter path to icon file manually.
-app_name                                  : Upcoming - Coming Soon                                  # Automatically populates if not set and if iOS app ID is set.  Otherwise enter manually.
-app_price                                 : $2.99                                          # Automatically populates if not set and if iOS app ID is set.  Otherwise enter manually.
-app_description                           : Countdown important events. Import, create, track and share countdowns. Coming Soon.
+app_icon                                  : assets/avatar.png                      # Automatically populates if not set and if iOS app ID is set.  Otherwise enter path to icon file manually.
+app_name                                  : Ben Pust                                  # Automatically populates if not set and if iOS app ID is set.  Otherwise enter manually.
+app_price                                 :                                           # Automatically populates if not set and if iOS app ID is set.  Otherwise enter manually.
+app_description                           : Building digital experiences, one project at a time.
 
-enable_smart_app_banner                   : true                                      # Set to true to show a smart app banner at top of page on mobile devices.
+enable_smart_app_banner                   : false                                      # Set to true to show a smart app banner at top of page on mobile devices.
 
 
 
@@ -34,69 +34,61 @@ youtube_username                          :
 # Feature List                            Edit, add or remove features to be presented.
 features                                  :
 
-  - title                                 : Countdowns
-    description                           : Create countdowns. Give them a name, an end date and time, notification intervals, and a cool background.
-    fontawesome_icon_name                 : grin-beam
-    
-  - title                                 : Import Calendar Events
-    description                           : Import calendar events into the app and turn them into a countdown.
-    fontawesome_icon_name                 : calendar-alt
+  - title                                 : Web Applications
+    description                           : Full-stack applications built with modern frameworks and cloud infrastructure.
+    fontawesome_icon_name                 : globe
 
-  - title                                 : Custom Notifications
-    description                           : Add notifications to your countdowns.
-    fontawesome_icon_name                 : bell
+  - title                                 : Mobile Development
+    description                           : Native and cross-platform mobile apps for iOS and Android.
+    fontawesome_icon_name                 : mobile-alt
 
-  - title                                 : Custom Backgrounds
-    description                           : Import an image from your photo library or pick a cool background from Unsplash.
-    fontawesome_icon_name                 : images
+  - title                                 : API Design
+    description                           : RESTful and GraphQL APIs with robust authentication and scalability.
+    fontawesome_icon_name                 : code
 
-  - title                                 : Widgets
-    description                           : Keep countdowns on your home screen.
-    fontawesome_icon_name                 : layer-group
-  
-  - title                                 : Share
-    description                           : Clip small countdown cards from Upcoming and share them with anyone.
-    fontawesome_icon_name                 : share
+  - title                                 : Data Visualization
+    description                           : Interactive dashboards and data-driven visual experiences.
+    fontawesome_icon_name                 : chart-line
 
-  - title                                 : Pinning
-    description                           : Keep the most important countdowns at the top of your feed.
-    fontawesome_icon_name                 : thumbtack
+  - title                                 : Automation Tools
+    description                           : Scripts and bots that make life easier, one task at a time.
+    fontawesome_icon_name                 : robot
 
-  - title                                 : Light & Dark Modes
-    description                           : Easy on the eyes at night, clear to see during the day :)
-    fontawesome_icon_name                 : adjust
+  - title                                 : Open Source
+    description                           : Contributing to and maintaining open source projects.
+    fontawesome_icon_name                 : code-branch
 
 
 
 # Theme Settings
-topbar_color                              : "#000000"
-topbar_transparency                       : 0.1
+topbar_color                              : "#0a0a0a"
+topbar_transparency                       : 0.05
 topbar_title_color                        : "#ffffff"
 
-cover_image                               : upcomingHeader.png                    # Replace with alternative image path or image URL.
-cover_overlay_color                       : "#363b3d"
-cover_overlay_transparency                : 0.8
+cover_image                               : assets/header_background.jpg                    # Replace with alternative image path or image URL.
+cover_overlay_color                       : "#1a1a2e"
+cover_overlay_transparency                : 0.85
 
 device_color                              : black                                     # Set to: blue, black, yellow, coral or white.
 
-body_background_color                     : "#ffffff"
+body_background_color                     : "#fafafa"
 
-link_color                                : "#1d63ea"
+link_color                                : "#4a90e2"
 
 app_title_color                           : "#ffffff"
 app_price_color                           : "#ffffff"
-app_description_color                     : "#ffffff"
+app_description_color                     : "#e0e0e0"
 
-feature_title_color                       : "#000000"
-feature_text_color                        : "#666666"
+feature_title_color                       : "#1a1a1a"
+feature_text_color                        : "#505050"
 
-feature_icons_foreground_color            : "#1d63ea"
-feature_icons_background_color            : "#e6e6e6"
+feature_icons_foreground_color            : "#ffffff"
+feature_icons_background_color            : "#4a90e2"
 
-social_icons_foreground_color             : "#666666"
-social_icons_background_color             : "#e6e6e6"
+social_icons_foreground_color             : "#4a90e2"
+social_icons_background_color             : "#f0f0f0"
 
-footer_text_color                         : "#666666"
+footer_text_color                         : "#808080"
 
 ####################################################
 ### Jekyll Configuration. No need to touch this. ###
