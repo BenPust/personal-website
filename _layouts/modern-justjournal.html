@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Just Journal - Your Private AI-Powered Journal</title>
+    <link rel="stylesheet" href="{{ '/main.css' | relative_url }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: #0a0a0a;
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+        .journal-hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(180deg, #0a0a0a 0%, #1a1a2e 100%);
+        }
+        .journal-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            overflow: hidden;
+        }
+        .journal-background::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image:
+                radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(255, 206, 84, 0.2) 0%, transparent 50%);
+            animation: float 30s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(-30px, -30px) scale(1.1); }
+            66% { transform: translate(30px, -20px) scale(0.95); }
+        }
+        .journal-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .app-icon {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 2rem;
+            background: linear-gradient(135deg, #7877c6 0%, #ff77c6 100%);
+            border-radius: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: white;
+            box-shadow: 0 20px 60px rgba(120, 119, 198, 0.4);
+            animation: pulse 3s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 20px 60px rgba(120, 119, 198, 0.4); }
+            50% { transform: scale(1.05); box-shadow: 0 25px 70px rgba(120, 119, 198, 0.6); }
+        }
+        .journal-title {
+            font-size: clamp(3rem, 8vw, 5rem);
+            font-weight: bold;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #ffffff 0%, #7877c6 50%, #ff77c6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 4s ease infinite;
+        }
+        .journal-subtitle {
+            font-size: 1.5rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 2rem;
+            font-weight: 300;
+            letter-spacing: 0.5px;
+        }
+        .journal-description {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.7);
+            max-width: 600px;
+            margin: 0 auto 3rem;
+            line-height: 1.6;
+        }
+        .download-section {
+            margin: 3rem 0;
+        }
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            margin: 4rem 0;
+        }
+        .feature-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            padding: 2.5rem;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(120, 119, 198, 0.1) 0%, rgba(255, 119, 198, 0.1) 100%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        .feature-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            border-color: rgba(120, 119, 198, 0.3);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+        }
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+        .feature-icon {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, #7877c6 0%, #ff77c6 100%);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            color: white;
+            position: relative;
+            z-index: 1;
+        }
+        .feature-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+        .feature-text {
+            color: rgba(255, 255, 255, 0.6);
+            line-height: 1.6;
+            position: relative;
+            z-index: 1;
+        }
+        .security-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(120, 119, 198, 0.2);
+            border: 1px solid rgba(120, 119, 198, 0.4);
+            border-radius: 50px;
+            padding: 0.75rem 1.5rem;
+            margin: 2rem 0;
+            color: #7877c6;
+            font-weight: 500;
+        }
+        .phone-showcase {
+            margin: 4rem 0;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+        }
+        .phone-mockup {
+            width: 280px;
+            height: 580px;
+            background: #1a1a1a;
+            border-radius: 40px;
+            padding: 10px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+            animation: floatPhone 6s ease-in-out infinite;
+        }
+        .phone-mockup:nth-child(2) {
+            animation-delay: 2s;
+        }
+        .phone-mockup:nth-child(3) {
+            animation-delay: 4s;
+        }
+        @keyframes floatPhone {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(2deg); }
+        }
+        .phone-screen {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, #2a2a3e 0%, #1a1a2e 100%);
+            border-radius: 30px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .journal-entry-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: left;
+        }
+        .entry-date {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.8rem;
+            margin-bottom: 0.5rem;
+        }
+        .entry-preview {
+            color: white;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            margin-bottom: 0.5rem;
+        }
+        .entry-tags {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        .entry-tag {
+            background: rgba(120, 119, 198, 0.3);
+            color: #a8a7e6;
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+        }
+        .nav-back {
+            position: fixed;
+            top: 2rem;
+            left: 2rem;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50px;
+            padding: 0.75rem 1.5rem;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+        .nav-back:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(-5px);
+        }
+        .tech-stack {
+            margin: 4rem 0;
+            padding: 3rem;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .tech-title {
+            font-size: 2rem;
+            color: white;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .tech-grid {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .tech-item {
+            background: rgba(120, 119, 198, 0.1);
+            border: 1px solid rgba(120, 119, 198, 0.3);
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            color: #a8a7e6;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .tech-item:hover {
+            background: rgba(120, 119, 198, 0.2);
+            transform: scale(1.05);
+        }
+        .cta-section {
+            margin: 4rem 0;
+            text-align: center;
+        }
+        .cta-title {
+            font-size: 2.5rem;
+            color: white;
+            margin-bottom: 1rem;
+        }
+        .cta-subtitle {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+        @media (max-width: 768px) {
+            .journal-title {
+                font-size: 3rem;
+            }
+            .phone-showcase {
+                gap: 2rem;
+            }
+            .phone-mockup {
+                width: 240px;
+                height: 500px;
+            }
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="/" class="nav-back">
+        <i class="fas fa-arrow-left"></i>
+        <span>Back to Portfolio</span>
+    </a>
+
+    <div class="journal-hero">
+        <div class="journal-background"></div>
+        <div class="journal-content">
+            <div class="app-icon">
+                <i class="fas fa-book-open"></i>
+            </div>
+
+            <h1 class="journal-title">Just Journal</h1>
+            <p class="journal-subtitle">Your Private AI-Powered Digital Journal</p>
+            <p class="journal-description">
+                A secure, intelligent journaling companion that helps you capture thoughts, track patterns, and gain insights from your daily reflections—all while keeping your data completely private.
+            </p>
+
+            <div class="security-badge">
+                <i class="fas fa-shield-alt"></i>
+                <span>End-to-End Privacy with On-Device AI</span>
+            </div>
+
+            <div class="download-section">
+                <a href="https://apps.apple.com/app/just-journal" target="_blank" style="display: inline-block;">
+                    <img src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/en-us?size=250x83" alt="Download on the App Store" style="height: 60px;">
+                </a>
+            </div>
+
+            <div class="phone-showcase">
+                <div class="phone-mockup">
+                    <div class="phone-screen">
+                        <div style="text-align: center; color: white; font-weight: 600; margin-bottom: 1rem;">Today</div>
+                        <div class="journal-entry-card">
+                            <div class="entry-date">10:30 AM</div>
+                            <div class="entry-preview">Had an amazing brainstorming session today. The team's energy was incredible...</div>
+                            <div class="entry-tags">
+                                <span class="entry-tag">work</span>
+                                <span class="entry-tag">creative</span>
+                            </div>
+                        </div>
+                        <div class="journal-entry-card">
+                            <div class="entry-date">7:15 AM</div>
+                            <div class="entry-preview">Morning meditation brought clarity about the project direction...</div>
+                            <div class="entry-tags">
+                                <span class="entry-tag">mindfulness</span>
+                                <span class="entry-tag">insight</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="phone-mockup">
+                    <div class="phone-screen" style="justify-content: center; align-items: center;">
+                        <div style="background: rgba(120, 119, 198, 0.2); border-radius: 20px; padding: 2rem; text-align: center;">
+                            <i class="fas fa-microphone" style="font-size: 3rem; color: #7877c6; margin-bottom: 1rem;"></i>
+                            <div style="color: white; font-size: 1.1rem; margin-bottom: 0.5rem;">Voice Recording</div>
+                            <div style="color: rgba(255, 255, 255, 0.5); font-size: 0.9rem;">Tap to start dictating</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="phone-mockup">
+                    <div class="phone-screen">
+                        <div style="text-align: center; color: white; font-weight: 600; margin-bottom: 1rem;">Weekly Insights</div>
+                        <div style="background: linear-gradient(135deg, rgba(120, 119, 198, 0.2) 0%, rgba(255, 119, 198, 0.2) 100%); border-radius: 16px; padding: 1.5rem;">
+                            <div style="color: #ff77c6; font-size: 0.9rem; margin-bottom: 0.5rem;">AI Summary</div>
+                            <div style="color: white; font-size: 0.85rem; line-height: 1.5;">This week showed strong focus on creative projects with increased morning productivity. Themes of collaboration and mindfulness appeared frequently.</div>
+                        </div>
+                        <div style="margin-top: 1rem; display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+                            <div style="background: rgba(255, 255, 255, 0.05); padding: 1rem; border-radius: 12px; text-align: center;">
+                                <div style="color: #7877c6; font-size: 1.5rem; font-weight: bold;">23</div>
+                                <div style="color: rgba(255, 255, 255, 0.5); font-size: 0.75rem;">Entries</div>
+                            </div>
+                            <div style="background: rgba(255, 255, 255, 0.05); padding: 1rem; border-radius: 12px; text-align: center;">
+                                <div style="color: #ff77c6; font-size: 1.5rem; font-weight: bold;">5</div>
+                                <div style="color: rgba(255, 255, 255, 0.5); font-size: 0.75rem;">Key Themes</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <h3 class="feature-title">PIN Protection</h3>
+                    <p class="feature-text">Secure your journal with a 4-digit PIN. Your thoughts remain private with authentication required on every app launch.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3 class="feature-title">AI-Powered Insights</h3>
+                    <p class="feature-text">Local LLM generates smart summaries, extracts tags, and provides weekly digests analyzing patterns across your entries.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-microphone-alt"></i>
+                    </div>
+                    <h3 class="feature-title">Voice Dictation</h3>
+                    <p class="feature-text">Capture thoughts instantly with voice recording. Real-time transcription with visual feedback makes journaling effortless.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-cloud"></i>
+                    </div>
+                    <h3 class="feature-title">iCloud Sync</h3>
+                    <p class="feature-text">Seamlessly sync across all your Apple devices. Your journal entries are always up-to-date, whether on iPhone or iPad.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-palette"></i>
+                    </div>
+                    <h3 class="feature-title">Adaptive Interface</h3>
+                    <p class="feature-text">Beautiful, responsive design that adapts to any screen size. Supports both light and dark modes with customizable text sizing.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-download"></i>
+                    </div>
+                    <h3 class="feature-title">Data Portability</h3>
+                    <p class="feature-text">Export your journal entries anytime. Import from other apps. Your data remains yours with full backup capabilities.</p>
+                </div>
+            </div>
+
+            <div class="tech-stack">
+                <h3 class="tech-title">Built with Modern Technology</h3>
+                <div class="tech-grid">
+                    <div class="tech-item">SwiftUI</div>
+                    <div class="tech-item">SwiftData</div>
+                    <div class="tech-item">Core ML</div>
+                    <div class="tech-item">CloudKit</div>
+                    <div class="tech-item">Speech Framework</div>
+                    <div class="tech-item">Local LLM</div>
+                    <div class="tech-item">Background Tasks</div>
+                    <div class="tech-item">iPad Optimization</div>
+                </div>
+            </div>
+
+            <div class="cta-section">
+                <h2 class="cta-title">Start Your Journaling Journey</h2>
+                <p class="cta-subtitle">Available now for iPhone and iPad</p>
+                <div class="download-section">
+                    <a href="https://apps.apple.com/app/just-journal" target="_blank" style="display: inline-block;">
+                        <img src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/en-us?size=250x83" alt="Download on the App Store" style="height: 60px;">
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Parallax effect
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const background = document.querySelector('.journal-background');
+            if (background) {
+                background.style.transform = `translateY(${scrolled * 0.3}px)`;
+            }
+        });
+
+        // Intersection observer for fade-in animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.feature-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'all 0.6s ease';
+            observer.observe(card);
+        });
+    </script>
+</body>
+</html>
