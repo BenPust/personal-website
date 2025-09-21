@@ -239,8 +239,10 @@
             <h1 class="upcoming-title">Upcoming</h1>
             <p class="upcoming-subtitle">Never Miss a Moment That Matters</p>
 
-            <div class="coming-soon-badge">
-                <i class="fas fa-rocket"></i> Coming Soon to App Store
+            <div style="margin: 2rem 0;">
+                <a href="https://apps.apple.com/app/id1234793120" target="_blank" style="display: inline-block; text-decoration: none;">
+                    <img src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/en-us?size=250x83&amp;releaseDate=1276560000" alt="Download on the App Store" style="height: 60px;">
+                </a>
             </div>
 
             <div class="upcoming-features">
@@ -282,14 +284,14 @@
                     <div class="phone-screen">
                         <div class="countdown-demo">
                             <div class="countdown-timer" id="countdown">00:00:00</div>
-                            <div class="countdown-label">Until Launch</div>
+                            <div class="countdown-label">Your Next Event</div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <h2 style="font-size: 2rem; color: white; margin: 3rem 0 1rem;">Get Notified When We Launch</h2>
-            <p style="color: rgba(255, 255, 255, 0.8); font-size: 1.2rem;">Join the waitlist to be the first to know</p>
+            <h2 style="font-size: 2rem; color: white; margin: 3rem 0 1rem;">Available Now</h2>
+            <p style="color: rgba(255, 255, 255, 0.8); font-size: 1.2rem;">Download today and start tracking what matters</p>
 
             <div class="social-links">
                 <a href="https://twitter.com/benpust" class="social-link" target="_blank">
@@ -306,11 +308,11 @@
     </div>
 
     <script>
-        // Countdown timer animation
+        // Demo countdown timer animation
         function updateCountdown() {
             const now = new Date().getTime();
-            const launchDate = new Date(now + 30 * 24 * 60 * 60 * 1000).getTime(); // 30 days from now
-            const distance = launchDate - now;
+            const targetDate = new Date(now + 7 * 24 * 60 * 60 * 1000).getTime(); // 7 days from now for demo
+            const distance = targetDate - now;
 
             const days = Math.floor(distance / (1000 * 60 * 60 * 24));
             const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
