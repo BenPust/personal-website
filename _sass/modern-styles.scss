@@ -237,15 +237,6 @@ html {
   transform: translateY(-3px);
 }
 
-// Floating animation for elements
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
-}
-
-.floating {
-  animation: float 3s ease-in-out infinite;
-}
 
 // Project Cards with Glassmorphism
 .project-grid {
