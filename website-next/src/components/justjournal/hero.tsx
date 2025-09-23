@@ -32,13 +32,15 @@ export function JustJournalHero() {
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ duration: 0.5, type: "spring" }}
-              className="w-32 h-32 mx-auto mb-8 rounded-3xl bg-gradient-to-br from-purple-600 to-pink-600 p-1"
+              className="w-32 h-32 mx-auto mb-8 rounded-3xl overflow-hidden shadow-2xl"
             >
-              <div className="w-full h-full bg-background rounded-3xl flex items-center justify-center">
-                <span className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-                  JJ
-                </span>
-              </div>
+              <Image
+                src="/justjournal/app-icon.png"
+                alt="Just Journal App Icon"
+                width={128}
+                height={128}
+                className="w-full h-full object-cover"
+              />
             </motion.div>
 
             <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
@@ -78,22 +80,31 @@ export function JustJournalHero() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="flex justify-center gap-8 flex-wrap"
           >
-            {[1, 2, 3].map((index) => (
-              <div
+            {[
+              { src: "/justjournal/screenshot1.png", alt: "Just Journal Home Screen" },
+              { src: "/justjournal/screenshot2.png", alt: "Just Journal Entry View" },
+              { src: "/justjournal/screenshot3.png", alt: "Just Journal Analytics" }
+            ].map((screenshot, index) => (
+              <motion.div
                 key={index}
-                className="relative w-72 h-[600px] rounded-[3rem] bg-gradient-to-br from-purple-900/50 to-pink-900/50 p-2"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
+                className="relative"
               >
-                <div className="w-full h-full bg-background rounded-[2.5rem] overflow-hidden">
-                  <div className="p-6">
-                    <div className="h-12 bg-muted rounded-lg mb-4" />
-                    <div className="space-y-3">
-                      <div className="h-20 bg-muted/50 rounded-lg" />
-                      <div className="h-16 bg-muted/30 rounded-lg" />
-                      <div className="h-24 bg-muted/50 rounded-lg" />
-                    </div>
+                <div className="relative w-72 h-[620px] rounded-[3rem] bg-gradient-to-br from-purple-900/50 to-pink-900/50 p-[3px]">
+                  <div className="relative w-full h-full bg-black rounded-[3rem] overflow-hidden">
+                    <Image
+                      src={screenshot.src}
+                      alt={screenshot.alt}
+                      width={360}
+                      height={780}
+                      className="w-full h-full object-cover"
+                      priority={index === 0}
+                    />
                   </div>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </motion.div>
         </div>

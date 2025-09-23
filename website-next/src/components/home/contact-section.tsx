@@ -112,20 +112,6 @@ export function ContactSection() {
                 </div>
               </CardContent>
             </Card>
-
-            <Card className="bg-gradient-to-br from-purple-500/10 to-pink-500/10 border-purple-500/20">
-              <CardContent className="p-6">
-                <h3 className="font-semibold mb-2">Open for Opportunities</h3>
-                <p className="text-sm text-muted-foreground mb-4">
-                  I&apos;m currently available for freelance projects and full-time positions.
-                  Let&apos;s create something amazing together!
-                </p>
-                <Button className="w-full" variant="outline">
-                  <Mail className="mr-2 h-4 w-4" />
-                  Schedule a Call
-                </Button>
-              </CardContent>
-            </Card>
           </motion.div>
         </div>
       </div>
