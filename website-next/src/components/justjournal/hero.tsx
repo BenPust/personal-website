@@ -1,9 +1,8 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Shield, Download } from "lucide-react"
+import { Shield } from "lucide-react"
 import Image from "next/image"
 
 export function JustJournalHero() {
@@ -62,14 +61,21 @@ export function JustJournalHero() {
               End-to-End Privacy with On-Device AI
             </Badge>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-              <Button size="lg" className="group">
-                <Download className="mr-2 h-5 w-5" />
-                Download on App Store
-              </Button>
-              <Button size="lg" variant="outline">
-                View on GitHub
-              </Button>
+            <div className="flex justify-center mb-12">
+              <a
+                href="https://apps.apple.com/app/just-journal"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block hover:opacity-90 transition-opacity"
+              >
+                <Image
+                  src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/en-us?size=250x83"
+                  alt="Download on the App Store"
+                  width={200}
+                  height={67}
+                  className="h-14 w-auto"
+                />
+              </a>
             </div>
           </motion.div>
 
