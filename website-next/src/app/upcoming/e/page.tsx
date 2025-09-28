@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 
 interface EventData {
   t: string;  // title
@@ -38,28 +38,28 @@ function calculateTimeRemaining(targetDate: Date) {
   return { days, hours, minutes, seconds, isPast: false };
 }
 
-// Required for static export with dynamic routes
-export function generateStaticParams() {
-  // Return empty array since we can't predict all possible countdown IDs
-  // Pages will be generated on-demand client-side
-  return [];
-}
-
 export default function CountdownPage() {
-  const params = useParams();
+  const pathname = usePathname();
   const [event, setEvent] = useState<EventData | null>(null);
   const [timeRemaining, setTimeRemaining] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0, isPast: false });
   const [isIOS, setIsIOS] = useState(false);
   const [attemptedAppOpen, setAttemptedAppOpen] = useState(false);
+  const [idString, setIdString] = useState<string>('');
 
   useEffect(() => {
-    // Decode the event data
-    // For catch-all route, id is an array
-    const idParam = params.id;
-    const idString = Array.isArray(idParam) ? idParam[0] : idParam;
+    // Extract ID from hash or pathname
+    // Try hash first (e.g., /upcoming/e#ABC123)
+    let extractedId = window.location.hash.substring(1);
 
-    if (idString) {
-      const decoded = decodeEventData(idString as string);
+    // If no hash, try pathname (e.g., /upcoming/e/ABC123)
+    if (!extractedId) {
+      const pathParts = pathname.split('/');
+      extractedId = pathParts[pathParts.length - 1];
+    }
+
+    if (extractedId && extractedId !== 'e') {
+      setIdString(extractedId);
+      const decoded = decodeEventData(extractedId);
       setEvent(decoded);
     }
 
@@ -68,13 +68,13 @@ export default function CountdownPage() {
     setIsIOS(iOS);
 
     // Track page view with Firebase Analytics (if available)
-    if (typeof window !== 'undefined' && (window as any).gtag) {
+    if (typeof window !== 'undefined' && (window as any).gtag && extractedId) {
       (window as any).gtag('event', 'countdown_viewed', {
         event_category: 'engagement',
-        event_label: idString,
+        event_label: extractedId,
       });
     }
-  }, [params.id]);
+  }, [pathname]);
 
   useEffect(() => {
     if (!event) return;
@@ -94,10 +94,8 @@ export default function CountdownPage() {
 
   useEffect(() => {
     // Try to open in app on iOS devices
-    if (isIOS && event && !attemptedAppOpen) {
+    if (isIOS && event && !attemptedAppOpen && idString) {
       setAttemptedAppOpen(true);
-      const idParam = params.id;
-      const idString = Array.isArray(idParam) ? idParam[0] : idParam;
       const appUrl = `upcoming://add-event?data=${idString}`;
 
       // Try to open the app
@@ -111,11 +109,9 @@ export default function CountdownPage() {
         }
       }, 2500);
     }
-  }, [isIOS, event, attemptedAppOpen, params.id]);
+  }, [isIOS, event, attemptedAppOpen, idString]);
 
   const handleOpenInApp = () => {
-    const idParam = params.id;
-    const idString = Array.isArray(idParam) ? idParam[0] : idParam;
     const appUrl = `upcoming://add-event?data=${idString}`;
     window.location.href = appUrl;
 
@@ -139,7 +135,7 @@ export default function CountdownPage() {
     if ((window as any).gtag) {
       (window as any).gtag('event', 'get_app_clicked', {
         event_category: 'engagement',
-        event_label: params.id,
+        event_label: idString,
       });
     }
 
@@ -171,8 +167,6 @@ END:VCALENDAR`;
     URL.revokeObjectURL(url);
 
     // Track action
-    const idParam = params.id;
-    const idString = Array.isArray(idParam) ? idParam[0] : idParam;
     if ((window as any).gtag) {
       (window as any).gtag('event', 'add_to_calendar', {
         event_category: 'engagement',
