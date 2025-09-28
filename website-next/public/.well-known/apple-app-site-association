@@ -1,0 +1,16 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "X34A8L9QRW.com.benpust.Upcoming",
+        "paths": [
+          "/upcoming/e/*"
+        ]
+      }
+    ]
+  },
+  "webcredentials": {
+    "apps": ["X34A8L9QRW.com.benpust.Upcoming"]
+  }
+}
