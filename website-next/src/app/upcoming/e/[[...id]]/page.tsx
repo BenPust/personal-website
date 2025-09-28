@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
-import { Metadata } from 'next';
 
 interface EventData {
   t: string;  // title
@@ -39,6 +38,13 @@ function calculateTimeRemaining(targetDate: Date) {
   return { days, hours, minutes, seconds, isPast: false };
 }
 
+// Required for static export with dynamic routes
+export function generateStaticParams() {
+  // Return empty array since we can't predict all possible countdown IDs
+  // Pages will be generated on-demand client-side
+  return [];
+}
+
 export default function CountdownPage() {
   const params = useParams();
   const [event, setEvent] = useState<EventData | null>(null);
@@ -48,8 +54,12 @@ export default function CountdownPage() {
 
   useEffect(() => {
     // Decode the event data
-    if (params.id) {
-      const decoded = decodeEventData(params.id as string);
+    // For catch-all route, id is an array
+    const idParam = params.id;
+    const idString = Array.isArray(idParam) ? idParam[0] : idParam;
+
+    if (idString) {
+      const decoded = decodeEventData(idString as string);
       setEvent(decoded);
     }
 
@@ -61,7 +71,7 @@ export default function CountdownPage() {
     if (typeof window !== 'undefined' && (window as any).gtag) {
       (window as any).gtag('event', 'countdown_viewed', {
         event_category: 'engagement',
-        event_label: params.id,
+        event_label: idString,
       });
     }
   }, [params.id]);
@@ -86,7 +96,9 @@ export default function CountdownPage() {
     // Try to open in app on iOS devices
     if (isIOS && event && !attemptedAppOpen) {
       setAttemptedAppOpen(true);
-      const appUrl = `upcoming://add-event?data=${params.id}`;
+      const idParam = params.id;
+      const idString = Array.isArray(idParam) ? idParam[0] : idParam;
+      const appUrl = `upcoming://add-event?data=${idString}`;
 
       // Try to open the app
       window.location.href = appUrl;
@@ -102,14 +114,16 @@ export default function CountdownPage() {
   }, [isIOS, event, attemptedAppOpen, params.id]);
 
   const handleOpenInApp = () => {
-    const appUrl = `upcoming://add-event?data=${params.id}`;
+    const idParam = params.id;
+    const idString = Array.isArray(idParam) ? idParam[0] : idParam;
+    const appUrl = `upcoming://add-event?data=${idString}`;
     window.location.href = appUrl;
 
     // Track action
     if ((window as any).gtag) {
       (window as any).gtag('event', 'open_app_clicked', {
         event_category: 'engagement',
-        event_label: params.id,
+        event_label: idString,
       });
     }
 
@@ -157,10 +171,12 @@ END:VCALENDAR`;
     URL.revokeObjectURL(url);
 
     // Track action
+    const idParam = params.id;
+    const idString = Array.isArray(idParam) ? idParam[0] : idParam;
     if ((window as any).gtag) {
       (window as any).gtag('event', 'add_to_calendar', {
         event_category: 'engagement',
-        event_label: params.id,
+        event_label: idString,
       });
     }
   };
