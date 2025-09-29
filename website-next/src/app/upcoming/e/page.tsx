@@ -140,8 +140,8 @@ export default function CountdownPage() {
       });
     }
 
-    // Replace with your actual App Store ID
-    window.location.href = 'https://apps.apple.com/app/upcoming-countdown-event/id1355138863';
+    // Open App Store page for Upcoming
+    window.location.href = 'https://apps.apple.com/us/app/upcoming-event-countdown/id1306662750';
   };
 
   const handleAddToCalendar = () => {
