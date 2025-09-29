@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
+import MetaTags from './MetaTags';
 
 interface EventData {
   t: string;  // title
@@ -197,15 +198,26 @@ END:VCALENDAR`;
   const isGradient = backgroundColor.includes('gradient');
 
   return (
-    <div
-      className="min-h-screen relative flex items-center justify-center"
-      style={{
-        background: isGradient ? backgroundColor : undefined,
-        backgroundColor: !isGradient ? backgroundColor : undefined
-      }}
-    >
-      {/* Content */}
-      <div className="relative z-10 text-white p-8 text-center max-w-2xl mx-auto">
+    <>
+      {/* Dynamic meta tags */}
+      {event && (
+        <MetaTags
+          title={event.t}
+          description={`Counting down to ${event.t} on ${formatDate(event.d, event.a)}`}
+          date={event.d}
+          color={event.c}
+        />
+      )}
+
+      <div
+        className="min-h-screen relative flex items-center justify-center"
+        style={{
+          background: isGradient ? backgroundColor : undefined,
+          backgroundColor: !isGradient ? backgroundColor : undefined
+        }}
+      >
+        {/* Content */}
+        <div className="relative z-10 text-white p-8 text-center max-w-2xl mx-auto">
         {/* Countdown Display */}
         <div className="mb-12">
           {timeRemaining.isPast ? (
@@ -276,5 +288,6 @@ END:VCALENDAR`;
         </div>
       </div>
     </div>
+    </>
   );
 }

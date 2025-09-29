@@ -1,8 +1,38 @@
-import type { Metadata } from "next";
+// Static metadata for Open Graph - will be overridden by dynamic tags where possible
+import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: "Upcoming - Countdown",
-  description: "View and track this countdown",
+  title: 'Upcoming Countdown',
+  description: 'Track special events and countdowns with Upcoming',
+  openGraph: {
+    title: 'Upcoming Countdown',
+    description: 'Track special events and countdowns with Upcoming',
+    type: 'website',
+    url: 'https://benpust.com/upcoming/e',
+    images: [{
+      url: 'https://benpust.com/upcoming-icon.png',
+      width: 1024,
+      height: 1024,
+      alt: 'Upcoming - Countdown Event App',
+    }],
+    siteName: 'Upcoming',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Upcoming Countdown',
+    description: 'Track special events and countdowns with Upcoming',
+    images: ['https://benpust.com/upcoming-icon.png'],
+  },
+  icons: {
+    icon: [
+      { url: '/favicon.ico' },
+      { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
+      { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/favicon-192x192.png', sizes: '192x192', type: 'image/png' },
+    ],
+  },
 };
 
 // Minimal footer component for countdown pages
