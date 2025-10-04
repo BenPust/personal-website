@@ -58,7 +58,7 @@ export function UpcomingHero() {
 
             <div className="flex justify-center mb-12">
               <a
-                href="https://apps.apple.com/app/upcoming"
+                href="https://apps.apple.com/us/app/upcoming-event-countdown/id1306662750"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-block hover:opacity-90 transition-opacity"
