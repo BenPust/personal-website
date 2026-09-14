@@ -3,6 +3,14 @@
     "apps": [],
     "details": [
       {
+        "appID": "3SQ44YK5BM.com.BenPust.Upcoming",
+        "paths": [
+          "/upcoming/e",
+          "/upcoming/e/",
+          "/upcoming/e/*"
+        ]
+      },
+      {
         "appID": "X34A8L9QRW.com.benpust.Upcoming",
         "paths": [
           "/upcoming/e",
@@ -12,6 +20,8 @@
     ]
   },
   "webcredentials": {
-    "apps": ["X34A8L9QRW.com.benpust.Upcoming"]
+    "apps": [
+      "X34A8L9QRW.com.benpust.Upcoming"
+    ]
   }
 }
